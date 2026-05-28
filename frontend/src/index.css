@@ -1,0 +1,406 @@
+@import "tailwindcss";
+
+/* Earthy Ethiopian cultural fusion — coffee, clay, gold, forest, warm light */
+@theme {
+  --font-sans: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Cormorant Garamond", ui-serif, Georgia, "Times New Roman", serif;
+
+  --color-ethio-canvas: #e8dfd0;
+  --color-ethio-paper: #faf6ef;
+  --color-ethio-ink: #2a2118;
+  --color-ethio-muted: #5e4f42;
+  --color-ethio-coffee: #4a3524;
+  --color-ethio-coffee-deep: #352518;
+  --color-ethio-clay: #9a6840;
+  --color-ethio-clay-soft: #c49a72;
+  --color-ethio-gold: #b8892b;
+  --color-ethio-gold-bright: #d4af37;
+  --color-ethio-gold-mist: #e5d4a1;
+  --color-ethio-forest: #2d4a32;
+  --color-ethio-forest-deep: #1e3322;
+  --color-ethio-forest-soft: #5c7a61;
+  --color-ethio-sun: #f4e8d4;
+  --color-ethio-sun-strong: #edd9b8;
+  --color-ethio-overlay: #1a1410;
+  --color-header-ivory: #f4e8d0;
+  --color-header-gold: #c9a86a;
+}
+
+@layer base {
+  html {
+    @apply font-sans antialiased text-ethio-ink;
+  }
+
+  body {
+    @apply m-0 min-h-dvh bg-ethio-canvas text-ethio-ink;
+  }
+}
+
+/* Warm light wash + subtle woven-style grid (abstract, not iconographic) */
+.ethio-page-bg {
+  background-color: var(--color-ethio-canvas);
+  background-image:
+    radial-gradient(ellipse 100% 55% at 50% -15%, rgb(255 248 232 / 0.85), transparent 52%),
+    linear-gradient(
+      165deg,
+      rgb(45 74 50 / 0.04) 0%,
+      transparent 35%,
+      rgb(74 53 36 / 0.05) 100%
+    ),
+    repeating-linear-gradient(
+      125deg,
+      rgb(74 53 36 / 0.045) 0px,
+      rgb(74 53 36 / 0.045) 1px,
+      transparent 1px,
+      transparent 14px
+    ),
+    repeating-linear-gradient(
+      55deg,
+      rgb(45 74 50 / 0.035) 0px,
+      rgb(45 74 50 / 0.035) 1px,
+      transparent 1px,
+      transparent 16px
+    );
+}
+
+.ethio-paper-surface {
+  background-color: rgb(250 246 239 / 0.92);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.65),
+    0 1px 0 rgb(74 53 36 / 0.06);
+}
+
+.ethio-card {
+  @apply rounded-[28px] border border-ethio-coffee/10 bg-ethio-paper/85 text-ethio-ink shadow-sm ring-1 ring-ethio-coffee/5 backdrop-blur-sm;
+}
+
+@keyframes image-marquee-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.image-marquee-track {
+  animation: image-marquee-left 30s linear infinite;
+}
+
+@keyframes logo-glow-bombard {
+  0% {
+    transform: translate3d(-6px, 2px, 0) scale(0.98);
+    opacity: 0.5;
+    filter: blur(14px);
+  }
+  35% {
+    transform: translate3d(0px, -2px, 0) scale(1.06);
+    opacity: 0.88;
+    filter: blur(18px);
+  }
+  60% {
+    transform: translate3d(6px, 1px, 0) scale(1.02);
+    opacity: 0.62;
+    filter: blur(15px);
+  }
+  100% {
+    transform: translate3d(-6px, 2px, 0) scale(0.98);
+    opacity: 0.5;
+    filter: blur(14px);
+  }
+}
+
+.logo-glow-bombard {
+  animation: logo-glow-bombard 2.4s ease-in-out infinite;
+}
+
+/* Minimal cinematic site header */
+.site-header--top {
+  background: transparent;
+  border-bottom-color: rgb(201 168 106 / 0.22);
+  backdrop-filter: none;
+}
+
+.site-header--scrolled {
+  background: rgb(15 15 15 / 0.45);
+  border-bottom-color: rgb(201 168 106 / 0.38);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.header-nav-link {
+  position: relative;
+  display: inline-block;
+  padding: 0.35rem 0;
+  color: var(--color-header-ivory);
+  transition: color 300ms ease;
+}
+
+.header-nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 1px;
+  width: 100%;
+  background: var(--color-header-gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 300ms ease;
+}
+
+.header-nav-link:hover {
+  color: var(--color-header-gold);
+}
+
+.header-nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+.header-nav-link--stacked {
+  display: block;
+  padding: 0.75rem 0;
+}
+
+/* Cinematic services — dark luxury portfolio block */
+.services-cinematic {
+  --services-bg: #0b0b0b;
+  --services-accent: #d4af37;
+  background-color: var(--services-bg);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgb(212 175 55 / 0.08), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 90% 20%, rgb(154 104 64 / 0.06), transparent 50%),
+    linear-gradient(180deg, rgb(11 11 11) 0%, rgb(18 14 10) 100%);
+}
+
+.services-cinematic::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+.services-reel-track {
+  animation: services-reel-scroll 40s linear infinite;
+}
+
+@keyframes services-reel-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Admin dashboard — dark professional shell */
+.admin-shell {
+  background-color: #0a0a0a;
+  background-image:
+    radial-gradient(ellipse 70% 45% at 0% 0%, rgb(212 175 55 / 0.07), transparent 50%),
+    radial-gradient(ellipse 50% 35% at 100% 10%, rgb(45 74 50 / 0.08), transparent 45%),
+    linear-gradient(180deg, #0a0a0a 0%, #12100e 100%);
+  color: var(--color-header-ivory);
+}
+
+.admin-card {
+  border-radius: 1rem;
+  border: 1px solid rgb(255 255 255 / 0.08);
+  background: rgb(255 255 255 / 0.03);
+  backdrop-filter: blur(8px);
+}
+
+.admin-stat-card {
+  border-radius: 1rem;
+  border: 1px solid rgb(201 168 106 / 0.15);
+  background: linear-gradient(145deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.02));
+}
+
+.admin-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgb(244 232 208 / 0.65);
+  transition: background 200ms ease, color 200ms ease;
+}
+
+.admin-sidebar-link:hover {
+  background: rgb(255 255 255 / 0.05);
+  color: var(--color-header-ivory);
+}
+
+.admin-sidebar-link--active {
+  background: rgb(201 168 106 / 0.12);
+  color: var(--color-header-gold);
+  box-shadow: inset 0 0 0 1px rgb(201 168 106 / 0.2);
+}
+
+.admin-input {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  background: rgb(0 0 0 / 0.35);
+  padding: 0.65rem 0.85rem;
+  font-size: 0.875rem;
+  color: var(--color-header-ivory);
+  outline: none;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.admin-input:focus {
+  border-color: rgb(201 168 106 / 0.45);
+  box-shadow: 0 0 0 3px rgb(201 168 106 / 0.12);
+}
+
+.admin-input::placeholder {
+  color: rgb(244 232 208 / 0.35);
+}
+
+/* Contact — navy two-column layout (reference mockup) */
+.contact-section {
+  --contact-navy: #0a0f1f;
+  --contact-panel: #0f1629;
+  background-color: var(--contact-navy);
+  background-image:
+    radial-gradient(ellipse 55% 45% at 0% 50%, rgb(56 120 190 / 0.12), transparent 55%),
+    radial-gradient(ellipse 40% 35% at 100% 80%, rgb(212 175 55 / 0.06), transparent 50%),
+    linear-gradient(165deg, #0a0f1f 0%, #0d1328 45%, #0a0f1f 100%);
+}
+
+.contact-form-card {
+  background: linear-gradient(155deg, rgb(18 26 48 / 0.95), rgb(12 18 36 / 0.98));
+  box-shadow:
+    0 24px 60px rgb(0 0 0 / 0.45),
+    inset 0 1px 0 rgb(255 255 255 / 0.06);
+}
+
+.contact-book-card {
+  box-shadow: 0 12px 40px rgb(0 0 0 / 0.25);
+}
+
+.contact-field-input {
+  border: none;
+  border-bottom: 1px solid rgb(255 255 255 / 0.35);
+  background: transparent;
+  padding: 0.5rem 0 0.65rem;
+  font-size: 0.875rem;
+  color: rgb(255 255 255 / 0.9);
+  outline: none;
+  transition: border-color 200ms ease;
+}
+
+.contact-field-input::placeholder {
+  color: rgb(255 255 255 / 0.28);
+}
+
+.contact-field-input:focus {
+  border-bottom-color: var(--color-header-gold);
+}
+
+.contact-field-textarea {
+  min-height: 4.5rem;
+}
+
+.contact-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: none;
+  background: rgb(228 236 248);
+  padding: 0.85rem 2rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0a0f1f;
+  cursor: pointer;
+  transition: background 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+}
+
+.contact-submit-btn:hover {
+  background: rgb(244 248 255);
+  box-shadow: 0 8px 28px rgb(200 210 230 / 0.25);
+  transform: translateY(-1px);
+}
+
+/* About — split hero layout with portrait rings */
+.about-hero-glow {
+  filter: blur(80px);
+}
+
+.about-hero-rings .about-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgb(201 168 106 / 0.18);
+}
+
+.about-ring--1 {
+  width: 88%;
+  height: 88%;
+  border-color: rgb(201 168 106 / 0.22);
+}
+
+.about-ring--2 {
+  width: 72%;
+  height: 72%;
+}
+
+.about-ring--3 {
+  width: 56%;
+  height: 56%;
+  border-color: rgb(45 74 50 / 0.25);
+}
+
+.about-portrait-wrap {
+  min-height: 420px;
+}
+
+.about-float-tag {
+  white-space: nowrap;
+}
+
+.about-tag-connector {
+  z-index: -1;
+  border: none;
+  background: transparent;
+}
+
+.about-tag-line--top {
+  right: 100%;
+  top: 50%;
+  width: 48px;
+  height: 48px;
+  margin-right: -8px;
+  border-bottom: 1px solid rgb(201 168 106 / 0.35);
+  border-left: 1px solid rgb(201 168 106 / 0.35);
+  border-radius: 0 0 0 100%;
+  transform: translateY(-20%);
+}
+
+.about-tag-line--mid {
+  left: 100%;
+  top: 40%;
+  width: 40px;
+  height: 40px;
+  margin-left: -6px;
+  border-top: 1px solid rgb(201 168 106 / 0.35);
+  border-right: 1px solid rgb(201 168 106 / 0.35);
+  border-radius: 0 100% 0 0;
+}
+
+.about-tag-line--bottom {
+  right: 100%;
+  bottom: 20%;
+  width: 52px;
+  height: 36px;
+  margin-right: -10px;
+  border-top: 1px solid rgb(201 168 106 / 0.35);
+  border-left: 1px solid rgb(201 168 106 / 0.35);
+  border-radius: 100% 0 0 0;
+}
