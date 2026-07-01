@@ -6,15 +6,13 @@ import ServicesSection from '../components/services'
 import PortfolioSection from '../components/portfolio'
 import ContactSection from '../components/contact'
 import logoSrc from '../assets/getpro.png'
+import heroVideoSrc from '../assets/getpro.mp4'
 import heroPosterSrc from '../assets/cameraman.jpg'
 import cubeEditingColor from '../assets/editingcolor/abin-james-x75kEKa6a0o-unsplash.jpg'
 import cubeEventLifestyle from '../assets/eventlifestyles/amy-vann-3NrS7gps6fM-unsplash.jpg'
 import cubeFashionCommercial from '../assets/fashioncommercial/angelo-pantazis-BIEaJ13iZrg-unsplash.jpg'
 import cubeFineArt from '../assets/fineartcreatives/aboodi-vesakaran-kfsEbvaaWbo-unsplash.jpg'
 import cubeLandscape from '../assets/landscapenature/april-vasquez-F6gpWb8ioy4-unsplash.jpg'
-
-/** Drop your reel at frontend/public/hero.mp4 */
-const HERO_VIDEO_SRC = '/hero.mp4'
 
 const cubeImages: [string, string, string, string, string, string] = [
   logoSrc,
@@ -46,7 +44,7 @@ export default function HomePage() {
           className="pointer-events-none absolute inset-0 h-full w-full scale-110 object-cover"
           aria-hidden
         >
-          <source src={HERO_VIDEO_SRC} type="video/mp4" />
+          <source src={heroVideoSrc} type="video/mp4" />
         </video>
 
         <div
