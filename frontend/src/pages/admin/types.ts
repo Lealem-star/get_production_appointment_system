@@ -5,8 +5,8 @@ export type AppointmentStatus = 'pending' | 'confirmed' | 'completed' | 'cancell
 export type Appointment = {
   id: string
   customerName: string
-  customerEmail?: string
   customerPhone?: string
+  customerAddress?: string
   service: string
   date: string
   time: string

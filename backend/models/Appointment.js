@@ -4,8 +4,8 @@ const appointmentSchema = new mongoose.Schema(
   {
     id: { type: String, required: true, unique: true, index: true },
     customerName: { type: String, required: true, trim: true },
-    customerEmail: { type: String, trim: true, lowercase: true },
     customerPhone: { type: String, trim: true },
+    customerAddress: { type: String, trim: true },
     service: { type: String, required: true, trim: true },
     date: { type: String, required: true, trim: true },
     time: { type: String, required: true, trim: true },

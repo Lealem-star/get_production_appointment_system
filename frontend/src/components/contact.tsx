@@ -6,11 +6,11 @@ type ContactSectionProps = {
 }
 
 const CONTACT = {
-  address: 'Addis Ababa, Ethiopia',
-  email: 'hello@getproduction.studio',
-  phone: '+251 932 717 615',
+  address: 'Megenagna',
+  email: 'ameaxo@gmail.com',
+  phone: '0932717615',
   phoneHref: 'tel:+251932717615',
-  mailto: 'mailto:hello@getproduction.studio',
+  mailto: 'mailto:ameaxo@gmail.com',
 } as const
 
 const SOCIAL_LINKS = [
@@ -47,6 +47,15 @@ const SOCIAL_LINKS = [
     icon: (
       <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
         <path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.41 0 12.07c0 6.02 4.39 11.02 10.13 11.9v-8.41H7.08v-3.5h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.23 2.68.23v2.96h-1.51c-1.49 0-1.95.93-1.95 1.88v2.26h3.32l-.53 3.5h-2.79v8.41C19.61 23.09 24 18.09 24 12.07Z" />
+      </svg>
+    ),
+  },
+  {
+    label: 'TikTok',
+    href: 'https://www.tiktok.com/@am68953',
+    icon: (
+      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.77 1.52V6.76a4.85 4.85 0 0 1-1-.07Z" />
       </svg>
     ),
   },
@@ -98,7 +107,7 @@ function ContactDetail({ icon, label, children }: ContactDetailProps) {
 
 export default function ContactSection({ onSetAppointment }: ContactSectionProps) {
   const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
   const [details, setDetails] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -122,7 +131,7 @@ export default function ContactSection({ onSetAppointment }: ContactSectionProps
       const response = await fetch(`${apiBaseUrl}/public/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, details }),
+        body: JSON.stringify({ name, phone, details }),
       })
 
       if (!response.ok) {
@@ -221,14 +230,14 @@ export default function ContactSection({ onSetAppointment }: ContactSectionProps
               </label>
 
               <label className="contact-field block">
-                <span className="text-sm font-semibold text-white">Email</span>
+                <span className="text-sm font-semibold text-white">Phone number</span>
                 <input
-                  type="email"
-                  name="email"
+                  type="tel"
+                  name="phone"
                   required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+251 9XX XXX XXX"
                   className="contact-field-input mt-2 w-full"
                 />
               </label>
@@ -248,7 +257,7 @@ export default function ContactSection({ onSetAppointment }: ContactSectionProps
 
               {submitted ? (
                 <p className="text-sm text-emerald-300/90">
-                  Opening your email client—thank you. We&apos;ll get back to you soon.
+                  Thank you—we&apos;ll get back to you soon.
                 </p>
               ) : null}
 

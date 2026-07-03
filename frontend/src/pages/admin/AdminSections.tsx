@@ -179,11 +179,11 @@ export function AppointmentsSection(props: AppointmentsSectionProps) {
                     <p className="mt-1 text-sm text-header-ivory/50">
                       {item.date} at {item.time} · {item.staffName}
                     </p>
-                    {item.customerEmail || item.customerPhone || item.location ? (
+                    {item.customerPhone || item.location ? (
                       <p className="mt-1 text-xs text-header-ivory/40">
-                        {item.customerEmail ? item.customerEmail : 'No email'}
-                        {item.customerPhone ? ` · ${item.customerPhone}` : ''}
-                        {item.location ? ` · ${item.location}` : ''}
+                        {item.customerPhone ?? ''}
+                        {item.customerPhone && item.location ? ' · ' : ''}
+                        {item.location ?? ''}
                       </p>
                     ) : null}
                   </div>
@@ -240,8 +240,8 @@ export function AppointmentsSection(props: AppointmentsSectionProps) {
               <DetailRow label="Assigned staff" value={selectedAppointment.staffName} />
               <DetailRow label="Client type" value={selectedAppointment.clientType ?? 'Not provided'} />
               <DetailRow label="Location" value={selectedAppointment.location ?? 'Not provided'} />
-              <DetailRow label="Email" value={selectedAppointment.customerEmail ?? 'Not provided'} />
               <DetailRow label="Phone" value={selectedAppointment.customerPhone ?? 'Not provided'} />
+              <DetailRow label="Customer address" value={selectedAppointment.customerAddress ?? 'Not provided'} />
             </dl>
 
             <div className="mt-4 rounded-xl border border-white/8 bg-black/25 p-3">

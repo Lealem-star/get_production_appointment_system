@@ -10,11 +10,13 @@ const clientTypes = [
 ]
 
 const serviceOptions = [
-  'Portrait Session',
-  'Event Coverage',
-  'Commercial Shoot',
-  'Family Photoshoot',
-  'Wedding Photo & Video',
+  'Wedding',
+  'Birthday',
+  'Baby shower',
+  'Graduation',
+  'Social media',
+  'Event',
+  'Modeling',
 ]
 
 const TOTAL_STEPS = 5
@@ -47,10 +49,11 @@ function CloseIcon() {
 export default function AppointmentOverlay({ open, onClose }: Props) {
   const [step, setStep] = useState(1)
   const [customerName, setCustomerName] = useState('')
-  const [customerEmail, setCustomerEmail] = useState('')
   const [customerPhone, setCustomerPhone] = useState('')
+  const [customerAddress, setCustomerAddress] = useState('')
   const [service, setService] = useState(serviceOptions[0]!)
   const [clientType, setClientType] = useState(clientTypes[0]!)
+  const [otherClientType, setOtherClientType] = useState('')
   const [location, setLocation] = useState<'Indoor' | 'Outdoor'>('Indoor')
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
@@ -61,15 +64,19 @@ export default function AppointmentOverlay({ open, onClose }: Props) {
 
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim() ?? ''
 
+  const resolvedClientType =
+    clientType === 'Others' ? otherClientType.trim() : clientType
+
   if (!open) return null
 
   const closeAndReset = () => {
     setStep(1)
     setCustomerName('')
-    setCustomerEmail('')
     setCustomerPhone('')
+    setCustomerAddress('')
     setService(serviceOptions[0]!)
     setClientType(clientTypes[0]!)
+    setOtherClientType('')
     setLocation('Indoor')
     setDate('')
     setTime('')
@@ -96,10 +103,10 @@ export default function AppointmentOverlay({ open, onClose }: Props) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           customerName,
-          customerEmail,
           customerPhone,
+          customerAddress,
           service,
-          clientType,
+          clientType: resolvedClientType,
           location,
           date,
           time,
@@ -188,16 +195,6 @@ export default function AppointmentOverlay({ open, onClose }: Props) {
                       />
                     </label>
                     <label className="block text-sm font-medium text-ethio-ink">
-                      Email
-                      <input
-                        type="email"
-                        value={customerEmail}
-                        onChange={(e) => setCustomerEmail(e.target.value)}
-                        className={fieldClass}
-                        placeholder="you@example.com"
-                      />
-                    </label>
-                    <label className="block text-sm font-medium text-ethio-ink">
                       Phone
                       <input
                         type="tel"
@@ -205,6 +202,16 @@ export default function AppointmentOverlay({ open, onClose }: Props) {
                         onChange={(e) => setCustomerPhone(e.target.value)}
                         className={fieldClass}
                         placeholder="+251 9XX XXX XXX"
+                      />
+                    </label>
+                    <label className="block text-sm font-medium text-ethio-ink">
+                      Customer address
+                      <input
+                        type="text"
+                        value={customerAddress}
+                        onChange={(e) => setCustomerAddress(e.target.value)}
+                        className={fieldClass}
+                        placeholder="Your address"
                       />
                     </label>
                     <label className="block text-sm font-medium text-ethio-ink">
@@ -227,7 +234,7 @@ export default function AppointmentOverlay({ open, onClose }: Props) {
                       type="button"
                       onClick={() => setStep(2)}
                       className={btnPrimary}
-                      disabled={!customerName.trim() || !customerEmail.trim() || !customerPhone.trim()}
+                      disabled={!customerName.trim() || !customerPhone.trim() || !customerAddress.trim()}
                     >
                       Next
                     </button>
@@ -253,18 +260,38 @@ export default function AppointmentOverlay({ open, onClose }: Props) {
                           type="radio"
                           name="clientType"
                           checked={clientType === type}
-                          onChange={() => setClientType(type)}
+                          onChange={() => {
+                            setClientType(type)
+                            if (type !== 'Others') setOtherClientType('')
+                          }}
                           className="accent-ethio-gold"
                         />
                         {type}
                       </label>
                     ))}
+                    {clientType === 'Others' ? (
+                      <label className="block text-sm font-medium text-ethio-ink">
+                        Specify client type
+                        <input
+                          type="text"
+                          value={otherClientType}
+                          onChange={(e) => setOtherClientType(e.target.value)}
+                          className={fieldClass}
+                          placeholder="Enter your client type"
+                        />
+                      </label>
+                    ) : null}
                   </div>
                   <div className="mt-6 flex items-center justify-between gap-3">
                     <button type="button" onClick={() => setStep(1)} className={btnSecondary}>
                       Back
                     </button>
-                    <button type="button" onClick={() => setStep(3)} className={btnPrimary}>
+                    <button
+                      type="button"
+                      onClick={() => setStep(3)}
+                      className={btnPrimary}
+                      disabled={clientType === 'Others' && !otherClientType.trim()}
+                    >
                       Next
                     </button>
                   </div>
@@ -379,7 +406,7 @@ export default function AppointmentOverlay({ open, onClose }: Props) {
               </div>
               <p className="mt-4 font-serif text-xl font-semibold text-ethio-coffee-deep">Thank you!</p>
               <p className="mt-2 text-sm leading-relaxed text-ethio-muted">
-                Thanks, {clientType}. We&apos;ll review your request and contact you soon.
+                Thanks, {resolvedClientType || clientType}. We&apos;ll review your request and contact you soon.
               </p>
               <button type="button" onClick={closeAndReset} className={`mt-6 ${btnPrimary}`}>
                 Close

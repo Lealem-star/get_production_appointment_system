@@ -3,12 +3,16 @@ const Appointment = require('../models/Appointment')
 
 async function createContact(req, res, next) {
   try {
-    const { name, email, details } = req.body || {}
+    const { name, phone, details } = req.body || {}
+
+    if (!name || !phone || !details) {
+      return res.status(400).json({ ok: false, error: 'Missing required fields' })
+    }
 
     await ContactMessage.create({
-      name: String(name || '').trim(),
-      email: String(email || '').trim().toLowerCase(),
-      details: String(details || '').trim(),
+      name: String(name).trim(),
+      phone: String(phone).trim(),
+      details: String(details).trim(),
     })
 
     return res.json({ ok: true })
@@ -21,8 +25,8 @@ async function createAppointment(req, res, next) {
   try {
     const {
       customerName,
-      customerEmail,
       customerPhone,
+      customerAddress,
       service,
       clientType,
       location,
@@ -31,7 +35,7 @@ async function createAppointment(req, res, next) {
       notes,
     } = req.body || {}
 
-    if (!customerName || !customerEmail || !customerPhone || !service || !date || !time) {
+    if (!customerName || !customerPhone || !service || !date || !time) {
       return res.status(400).json({ ok: false, error: 'Missing required fields' })
     }
 
@@ -41,8 +45,8 @@ async function createAppointment(req, res, next) {
     await Appointment.create({
       id,
       customerName: String(customerName || '').trim(),
-      customerEmail: String(customerEmail || '').trim().toLowerCase(),
       customerPhone: String(customerPhone || '').trim(),
+      customerAddress: String(customerAddress || '').trim(),
       service: String(service || '').trim(),
       date: String(date || '').trim(),
       time: String(time || '').trim(),

@@ -15,8 +15,8 @@ async function getBootstrap(req, res, next) {
       appointments: appointments.map((item) => ({
         id: item.id,
         customerName: item.customerName,
-        customerEmail: item.customerEmail || '',
         customerPhone: item.customerPhone || '',
+        customerAddress: item.customerAddress || '',
         service: item.service,
         date: item.date,
         time: item.time,
