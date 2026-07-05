@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import AppointmentOverlay from '../components/AppointmentOverlay'
 import SiteHeader from '../components/SiteHeader'
 import AboutSection from '../components/about'
@@ -23,8 +24,34 @@ const cubeImages: [string, string, string, string, string, string] = [
   cubeLandscape,
 ]
 
+const HERO_COPY = {
+  en: {
+    title: 'Creating Timeless Frames',
+    description:
+      'We craft photo and video with an earthy, human-centered eye—where cultural storytelling, documentary truth, and a modern cinematic finish meet. From events to branded work, your story stays authentic on screen.',
+  },
+  am: {
+    title: 'ዘላለማዊ ትዝታዎችን እንፈጥራለን',
+    description:
+      'ባህልን የሚያከብር፣ ሰውን ማዕከል ያደረገ እይታ ያለው የፎቶና ቪዲዮ ስራ እንሰራለን። ከባህላዊ ተረክ እና ከእውነተኛ ዶክመንተሪ ቅርፅ ጋር ዘመናዊ የሲኒማ ጥራትን በማዋሃድ፣ ከዝግጅቶች እስከ የብራንድ ፕሮጀክቶች ድረስ ታሪክዎ በእውነተኛነት እንዲታይ እናደርጋለን።',
+  },
+} as const
+
+type HeroLang = keyof typeof HERO_COPY
+
 export default function HomePage() {
   const [appointmentOpen, setAppointmentOpen] = useState(false)
+  const [heroLang, setHeroLang] = useState<HeroLang>('am')
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setHeroLang((current) => (current === 'en' ? 'am' : 'en'))
+    }, 15000)
+
+    return () => window.clearInterval(intervalId)
+  }, [])
+
+  const heroCopy = HERO_COPY[heroLang]
 
   return (
     <div className="min-h-dvh bg-[#0b0b0b] text-ethio-ink">
@@ -53,17 +80,26 @@ export default function HomePage() {
         />
 
         <div className="relative z-10 mx-auto w-full max-w-5xl px-5 py-24 text-center sm:px-10 sm:py-32">
-          <h1 className="font-serif text-3xl font-semibold leading-tight tracking-tight drop-shadow-md sm:text-5xl lg:text-6xl">
-            <span className="bg-linear-to-r from-ethio-sun via-ethio-gold-mist to-ethio-gold-bright bg-clip-text text-transparent">
-              Creating Timeless Frames
-            </span>
-          </h1>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={heroLang}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.45 }}
+              lang={heroLang === 'am' ? 'am' : 'en'}
+            >
+              <h1 className="font-serif text-3xl font-semibold leading-tight tracking-tight drop-shadow-md sm:text-5xl lg:text-6xl">
+                <span className="bg-linear-to-r from-ethio-sun via-ethio-gold-mist to-ethio-gold-bright bg-clip-text text-transparent">
+                  {heroCopy.title}
+                </span>
+              </h1>
 
-          <p className="mx-auto mt-4 max-w-4xl text-sm font-semibold leading-relaxed text-ethio-sun/90 drop-shadow-sm sm:mt-6 sm:text-base lg:text-lg">
-            We craft photo and video with an earthy, human-centered eye—where cultural storytelling,
-            documentary truth, and a modern cinematic finish meet. From events to branded work, your
-            story stays authentic on screen.
-          </p>
+              <p className="mx-auto mt-4 max-w-4xl text-sm font-semibold leading-relaxed text-ethio-sun/90 drop-shadow-sm sm:mt-6 sm:text-base lg:text-lg">
+                {heroCopy.description}
+              </p>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </section>
 
