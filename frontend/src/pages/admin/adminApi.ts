@@ -1,10 +1,20 @@
-import type { Appointment, AppointmentStatus, PostItem, Role, UserItem } from './types'
+import type {
+  Appointment,
+  AppointmentStatus,
+  ContactMessage,
+  PostItem,
+  Role,
+  StaffMember,
+  UserItem,
+} from './types'
 
 export type AdminSeedData = {
   role: Role
   appointments: Appointment[]
   users: UserItem[]
   posts: PostItem[]
+  contactMessages: ContactMessage[]
+  staffMembers: StaffMember[]
 }
 
 type LoginApiResponse = {
@@ -12,32 +22,7 @@ type LoginApiResponse = {
   role?: Role
 }
 
-type BootstrapApiResponse = {
-  role: Role
-  appointments: Appointment[]
-  users: UserItem[]
-  posts: PostItem[]
-}
-
-const appointmentsSeed: Appointment[] = [
-  { id: 'APT-1001', customerName: 'Joyce M.', service: 'Portrait Session', date: '2026-04-19', time: '10:00 AM', staffName: 'Abin', status: 'pending' },
-  { id: 'APT-1002', customerName: 'Luis B.', service: 'Event Coverage', date: '2026-04-19', time: '02:00 PM', staffName: 'Maria', status: 'confirmed' },
-  { id: 'APT-1003', customerName: 'Tina K.', service: 'Commercial Shoot', date: '2026-04-20', time: '11:30 AM', staffName: 'Abin', status: 'completed' },
-  { id: 'APT-1004', customerName: 'Noah D.', service: 'Family Photoshoot', date: '2026-04-20', time: '04:30 PM', staffName: 'Erik', status: 'cancelled' },
-]
-
-const usersSeed: UserItem[] = [
-  { id: 'USR-1', name: 'Leale Admin', email: 'admin@studio.local', role: 'admin', status: 'active' },
-  { id: 'USR-2', name: 'Abin James', email: 'abin@studio.local', role: 'staff', status: 'active' },
-  { id: 'USR-3', name: 'Maria Santos', email: 'maria@studio.local', role: 'staff', status: 'active' },
-  { id: 'USR-4', name: 'Karen Doe', email: 'karen@email.com', role: 'customer', status: 'blocked' },
-]
-
-const postsSeed: PostItem[] = [
-  { id: 'PST-1', title: 'Summer Portrait Promo', category: 'Offers', published: true },
-  { id: 'PST-2', title: 'How To Prepare For A Studio Shoot', category: 'Blog', published: false },
-  { id: 'PST-3', title: 'New Lighting Setup Available', category: 'Updates', published: true },
-]
+type BootstrapApiResponse = AdminSeedData
 
 const adminTokenStorageKey = 'studio_admin_token'
 
@@ -49,12 +34,18 @@ function hasApiBaseUrl() {
   return getApiBaseUrl().length > 0
 }
 
+function getAuthHeaders(): Record<string, string> {
+  const token = localStorage.getItem(adminTokenStorageKey)
+  return token ? { Authorization: `Bearer ${token}` } : {}
+}
+
 async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
   const baseUrl = getApiBaseUrl()
   const response = await fetch(`${baseUrl}${path}`, {
     ...init,
     headers: {
       'Content-Type': 'application/json',
+      ...getAuthHeaders(),
       ...(init?.headers ?? {}),
     },
   })
@@ -66,69 +57,117 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
   return (await response.json()) as T
 }
 
-function cloneData() {
-  return {
-    appointments: appointmentsSeed.map((item) => ({ ...item })),
-    users: usersSeed.map((item) => ({ ...item })),
-    posts: postsSeed.map((item) => ({ ...item })),
-  }
-}
-
 export async function loginAdmin(email: string, password: string): Promise<Role | null> {
   const normalizedEmail = email.trim().toLowerCase()
   const normalizedPassword = password.trim()
 
-  if (hasApiBaseUrl()) {
-    const payload = await requestJson<LoginApiResponse>('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ email: normalizedEmail, password: normalizedPassword }),
-    })
+  if (!hasApiBaseUrl()) return null
 
-    if (!payload.role) return null
-    if (payload.token) localStorage.setItem(adminTokenStorageKey, payload.token)
-    return payload.role
+  const payload = await requestJson<LoginApiResponse>('/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({ email: normalizedEmail, password: normalizedPassword }),
+  })
+
+  if (!payload.role) return null
+  if (payload.token) localStorage.setItem(adminTokenStorageKey, payload.token)
+  return payload.role
+}
+
+export async function fetchAdminSeedData(): Promise<AdminSeedData> {
+  if (!hasApiBaseUrl()) {
+    return {
+      role: 'admin',
+      appointments: [],
+      users: [],
+      posts: [],
+      contactMessages: [],
+      staffMembers: [],
+    }
   }
 
-  if (normalizedEmail === 'admin@studio.local' && normalizedPassword === 'admin123') return 'admin'
-  if (normalizedEmail === 'staff@studio.local' && normalizedPassword === 'staff123') return 'staff'
-  return null
+  return requestJson<BootstrapApiResponse>('/admin/bootstrap', { method: 'GET' })
 }
 
-export async function fetchAdminSeedData(role: Role): Promise<AdminSeedData> {
-  if (hasApiBaseUrl()) {
-    const token = localStorage.getItem(adminTokenStorageKey)
-    const payload = await requestJson<BootstrapApiResponse>('/admin/bootstrap', {
-      method: 'GET',
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    })
-    return payload
+export async function updateAppointmentOnServer(
+  id: string,
+  patch: { status?: AppointmentStatus; staffName?: string },
+): Promise<Appointment> {
+  const payload = await requestJson<{ appointment: Appointment }>(`/admin/appointments/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(patch),
+  })
+  return payload.appointment
+}
+
+export async function updateUserOnServer(
+  id: string,
+  patch: { role?: UserItem['role']; status?: UserItem['status'] },
+): Promise<UserItem> {
+  const payload = await requestJson<{ user: UserItem }>(`/admin/users/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(patch),
+  })
+  return payload.user
+}
+
+export async function createUserOnServer(input: {
+  name: string
+  email: string
+  password: string
+  role: 'staff' | 'customer'
+}): Promise<UserItem> {
+  const payload = await requestJson<{ user: UserItem }>('/admin/users', {
+    method: 'POST',
+    body: JSON.stringify(input),
+  })
+  return payload.user
+}
+
+export async function createPostOnServer(input: {
+  title: string
+  category: string
+  imageUrl: string
+  published?: boolean
+}): Promise<PostItem> {
+  const payload = await requestJson<{ post: PostItem }>('/admin/posts', {
+    method: 'POST',
+    body: JSON.stringify(input),
+  })
+  return payload.post
+}
+
+export async function updatePostOnServer(
+  id: string,
+  patch: { title?: string; category?: string; imageUrl?: string; published?: boolean },
+): Promise<PostItem> {
+  const payload = await requestJson<{ post: PostItem }>(`/admin/posts/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(patch),
+  })
+  return payload.post
+}
+
+export function nextUserRole(role: UserItem['role']): UserItem['role'] {
+  if (role === 'customer') return 'staff'
+  if (role === 'staff') return 'admin'
+  return 'customer'
+}
+
+export async function uploadPostImageOnServer(file: File): Promise<string> {
+  const baseUrl = getApiBaseUrl()
+  const formData = new FormData()
+  formData.append('image', file)
+
+  const response = await fetch(`${baseUrl}/admin/upload`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: formData,
+  })
+
+  if (!response.ok) {
+    throw new Error(`Upload failed with status ${response.status}`)
   }
 
-  const data = cloneData()
-  return { role, ...data }
+  const payload = (await response.json()) as { url: string }
+  return payload.url
 }
-
-export function updateAppointmentStatusInStore(items: Appointment[], id: string, status: AppointmentStatus): Appointment[] {
-  return items.map((item) => (item.id === id ? { ...item, status } : item))
-}
-
-export function toggleUserStatusInStore(items: UserItem[], id: string): UserItem[] {
-  return items.map((item) => {
-    if (item.id !== id) return item
-    return { ...item, status: item.status === 'active' ? 'blocked' : 'active' }
-  })
-}
-
-export function cycleUserRoleInStore(items: UserItem[], id: string): UserItem[] {
-  return items.map((item) => {
-    if (item.id !== id) return item
-    if (item.role === 'customer') return { ...item, role: 'staff' }
-    if (item.role === 'staff') return { ...item, role: 'admin' }
-    return { ...item, role: 'customer' }
-  })
-}
-
-export function togglePostPublishedInStore(items: PostItem[], id: string): PostItem[] {
-  return items.map((item) => (item.id === id ? { ...item, published: !item.published } : item))
-}
-

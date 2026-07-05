@@ -1,5 +1,6 @@
 const ContactMessage = require('../models/ContactMessage')
 const Appointment = require('../models/Appointment')
+const Post = require('../models/Post')
 
 async function createContact(req, res, next) {
   try {
@@ -63,4 +64,18 @@ async function createAppointment(req, res, next) {
   }
 }
 
-module.exports = { createContact, createAppointment }
+async function getPublishedPosts(_req, res, next) {
+  try {
+    const posts = await Post.find(
+      { published: true, imageUrl: { $ne: '' } },
+      { _id: 0, __v: 0, createdAt: 0, updatedAt: 0 },
+    )
+      .sort({ updatedAt: -1 })
+      .lean()
+    return res.json({ posts })
+  } catch (error) {
+    return next(error)
+  }
+}
+
+module.exports = { createContact, createAppointment, getPublishedPosts }

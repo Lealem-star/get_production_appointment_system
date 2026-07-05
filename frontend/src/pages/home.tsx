@@ -6,6 +6,7 @@ import AboutSection from '../components/about'
 import ServicesSection from '../components/services'
 import PortfolioSection from '../components/portfolio'
 import ContactSection from '../components/contact'
+import { buildFallbackPortfolioItems, fetchPublishedPortfolioItems, type PortfolioItem } from '../lib/publicApi'
 import logoSrc from '../assets/getpro.png'
 import heroVideoSrc from '../assets/getpro.mp4'
 import heroPosterSrc from '../assets/cameraman.jpg'
@@ -39,9 +40,19 @@ const HERO_COPY = {
 
 type HeroLang = keyof typeof HERO_COPY
 
+const fallbackPortfolioItems = buildFallbackPortfolioItems(cubeImages, [
+  'Get Production',
+  'Editing & color',
+  'Events & lifestyle',
+  'Fashion & commercial',
+  'Fine art',
+  'Landscape & nature',
+])
+
 export default function HomePage() {
   const [appointmentOpen, setAppointmentOpen] = useState(false)
   const [heroLang, setHeroLang] = useState<HeroLang>('am')
+  const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>(fallbackPortfolioItems)
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
@@ -49,6 +60,21 @@ export default function HomePage() {
     }, 15000)
 
     return () => window.clearInterval(intervalId)
+  }, [])
+
+  useEffect(() => {
+    let isActive = true
+
+    async function loadPortfolio() {
+      const publishedItems = await fetchPublishedPortfolioItems()
+      if (!isActive) return
+      if (publishedItems.length > 0) setPortfolioItems(publishedItems)
+    }
+
+    void loadPortfolio()
+    return () => {
+      isActive = false
+    }
   }, [])
 
   const heroCopy = HERO_COPY[heroLang]
@@ -112,7 +138,7 @@ export default function HomePage() {
       </section>
 
       <section id="portfolio">
-        <PortfolioSection images={cubeImages} />
+        <PortfolioSection items={portfolioItems} />
       </section>
 
       <ContactSection onSetAppointment={() => setAppointmentOpen(true)} />

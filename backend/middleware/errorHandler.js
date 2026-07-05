@@ -5,6 +5,11 @@ function notFoundHandler(_req, res) {
 function errorHandler(error, _req, res, _next) {
   // eslint-disable-next-line no-console
   console.error(error)
+
+  if (error?.code === 'LIMIT_FILE_SIZE') {
+    return res.status(400).json({ error: 'Image must be 5MB or smaller' })
+  }
+
   const status = Number(error.statusCode || error.status || 500)
   const message = error.message || 'Internal Server Error'
   res.status(status).json({ error: message })

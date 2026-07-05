@@ -29,8 +29,21 @@ export type PostItem = {
   id: string
   title: string
   category: string
+  imageUrl?: string
   published: boolean
 }
 
-export type TabKey = 'dashboard' | 'appointments' | 'users' | 'posts'
+export type ContactMessage = {
+  id: string
+  name: string
+  phone: string
+  details: string
+  createdAt?: string
+}
 
+export type StaffMember = {
+  id: string
+  name: string
+}
+
+export type TabKey = 'dashboard' | 'appointments' | 'contacts' | 'users' | 'posts'

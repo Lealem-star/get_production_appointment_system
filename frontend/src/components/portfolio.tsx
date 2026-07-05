@@ -1,10 +1,11 @@
 import { motion } from 'framer-motion'
+import type { PortfolioItem } from '../lib/publicApi'
 
 type PortfolioSectionProps = {
-  images: string[]
+  items: PortfolioItem[]
 }
 
-export default function PortfolioSection({ images }: PortfolioSectionProps) {
+export default function PortfolioSection({ items }: PortfolioSectionProps) {
   return (
     <div className="services-cinematic relative w-full overflow-hidden">
       <div className="relative z-10 mx-auto max-w-6xl px-4 py-14 sm:px-8 sm:py-20">
@@ -23,21 +24,26 @@ export default function PortfolioSection({ images }: PortfolioSectionProps) {
         </motion.header>
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6">
-          {images.map((src, idx) => (
+          {items.map((item, idx) => (
             <motion.div
-              key={idx}
+              key={item.id}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.05, duration: 0.45 }}
-              className="group overflow-hidden rounded-2xl border border-white/10 ring-1 ring-white/5 transition duration-300 hover:border-amber-400/40 hover:shadow-[0_0_28px_rgba(255,200,80,0.12)]"
+              className="group relative overflow-hidden rounded-2xl border border-white/10 ring-1 ring-white/5 transition duration-300 hover:border-amber-400/40 hover:shadow-[0_0_28px_rgba(255,200,80,0.12)]"
             >
               <img
-                src={src}
-                alt={`Portfolio frame ${idx + 1}`}
+                src={item.imageUrl}
+                alt={item.title}
                 className="aspect-square w-full object-cover transition duration-500 group-hover:scale-105"
                 loading="lazy"
               />
+              <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-0 transition duration-300 group-hover:opacity-100" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 p-3 opacity-0 transition duration-300 group-hover:opacity-100">
+                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-amber-300/90">{item.category}</p>
+                <p className="mt-1 text-sm font-semibold leading-snug text-white">{item.title}</p>
+              </div>
             </motion.div>
           ))}
         </div>

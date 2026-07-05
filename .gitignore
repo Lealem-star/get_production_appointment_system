@@ -19,3 +19,7 @@
 Thumbs.db
 .vscode/
 
+# uploaded media (keep folder via .gitkeep)
+backend/uploads/*
+!backend/uploads/.gitkeep
+

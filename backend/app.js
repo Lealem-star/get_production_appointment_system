@@ -2,12 +2,14 @@ const express = require('express')
 const authRoutes = require('./routes/authRoutes')
 const adminRoutes = require('./routes/adminRoutes')
 const publicRoutes = require('./routes/publicRoutes')
+const { uploadsDir } = require('./middleware/upload')
 const { notFoundHandler, errorHandler } = require('./middleware/errorHandler')
 
 const app = express()
 
 app.disable('x-powered-by')
 app.use(express.json({ limit: '1mb' }))
+app.use('/uploads', express.static(uploadsDir))
 
 // Development CORS: frontend runs on :5173, backend on :5000.
 app.use((req, res, next) => {
