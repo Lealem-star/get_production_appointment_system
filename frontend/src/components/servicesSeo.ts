@@ -1,9 +1,9 @@
 export const seoContent = {
-  title: 'Professional Photo & Video Studio Services',
+  title: 'Professional Photo & Video Studio Services in Addis Ababa',
   description:
-    'We offer high-quality photography and videography services including portraits, events, fashion, product photography, and cinematic video production. Capture your moments with creativity and professionalism.',
+    'Get Production offers high-quality photography and videography in Addis Ababa, Ethiopia — portraits, weddings, events, fashion, product photography, and cinematic video production.',
   keywords:
-    'photo studio, videography, portrait photography, wedding photography, product photography, commercial video, drone photography',
+    'photo studio Addis Ababa, videography Ethiopia, portrait photography, wedding photography, product photography, commercial video, drone photography',
 
   sections: [
     {

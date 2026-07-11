@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
+import { usePageSeo } from '../../hooks/usePageSeo'
+import { adminSeo } from '../../lib/seoConfig'
 import {
   createPostOnServer,
   createUserOnServer,
@@ -34,6 +36,8 @@ import type {
 const adminTokenStorageKey = 'studio_admin_token'
 
 export default function AdminPage() {
+  usePageSeo(adminSeo)
+
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [bootstrapping, setBootstrapping] = useState(true)
   const [role, setRole] = useState<Role>('admin')

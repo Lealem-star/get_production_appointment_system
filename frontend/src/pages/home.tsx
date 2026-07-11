@@ -6,6 +6,9 @@ import AboutSection from '../components/about'
 import ServicesSection from '../components/services'
 import PortfolioSection from '../components/portfolio'
 import ContactSection from '../components/contact'
+import LocalBusinessJsonLd from '../components/LocalBusinessJsonLd'
+import { usePageSeo } from '../hooks/usePageSeo'
+import { homeSeo } from '../lib/seoConfig'
 import { buildFallbackPortfolioItems, fetchPublishedPortfolioItems, type PortfolioItem } from '../lib/publicApi'
 import logoSrc from '../assets/getpro.png'
 import heroVideoSrc from '../assets/getpro.mp4'
@@ -54,6 +57,8 @@ export default function HomePage() {
   const [heroLang, setHeroLang] = useState<HeroLang>('am')
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>(fallbackPortfolioItems)
 
+  usePageSeo(homeSeo)
+
   useEffect(() => {
     const intervalId = window.setInterval(() => {
       setHeroLang((current) => (current === 'en' ? 'am' : 'en'))
@@ -81,6 +86,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-dvh bg-[#0b0b0b] text-ethio-ink">
+      <LocalBusinessJsonLd />
       <SiteHeader onSetAppointment={() => setAppointmentOpen(true)} />
 
       <section

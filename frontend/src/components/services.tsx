@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { seoContent } from './servicesSeo'
 import imgPortrait from '../assets/Portrait/look-studio-k7N9R_iYSkE-unsplash.jpg'
 import imgLifestyle from '../assets/eventlifestyles/amy-vann-3NrS7gps6fM-unsplash.jpg'
 import imgEventHero from '../assets/eventlifestyles/virginia-marinova-TjhNcyQ3--Q-unsplash.jpg'
@@ -334,6 +335,22 @@ export default function ServicesSection({ onSetAppointment }: ServicesSectionPro
             ))}
           </motion.div>
         </motion.div>
+
+        <section
+          aria-label="Studio services overview"
+          className="mt-16 rounded-2xl border border-white/10 bg-black/25 p-6 backdrop-blur-md sm:mt-20 sm:p-10"
+        >
+          <h3 className="font-serif text-xl font-semibold text-white sm:text-2xl">{seoContent.title}</h3>
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/60 sm:text-base">{seoContent.description}</p>
+          <div className="mt-8 grid gap-6 sm:grid-cols-3">
+            {seoContent.sections.map((section) => (
+              <article key={section.heading} className="rounded-xl border border-white/10 bg-white/3 p-5">
+                <h4 className="font-serif text-lg font-semibold text-amber-100/95">{section.heading}</h4>
+                <p className="mt-2 text-sm leading-relaxed text-white/55">{section.text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
 
         <motion.div
           initial={{ opacity: 0, y: 24 }}
